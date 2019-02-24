@@ -4,4 +4,7 @@
     <string name="last_name">LastName</string>
     <string name="view_users">View Users</string>
     <string name="create_user">Create User</string>
+    <string name="name_hint">Name</string>
+    <string name="job_hint">Job</string>
+    <string name="button_click_me">Click me</string>
 </resources>
