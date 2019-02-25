@@ -4,12 +4,12 @@ import com.example.testapp.Model.UserDetails;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Url;
 
 public interface DetailsRequestInterface {
 
     String BASE_URL = "https://reqres.in/api/";
-    String second = "users?page=1";
 
-    @GET(second)
-    Call<UserDetails> getJSON();
+    @GET
+    Call<UserDetails> getJSON(@Url String url);
 }

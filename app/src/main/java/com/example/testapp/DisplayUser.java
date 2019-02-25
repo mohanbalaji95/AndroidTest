@@ -12,8 +12,11 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.example.testapp.Interface.DetailsRequestInterface;
+import com.example.testapp.Model.Individual;
 import com.example.testapp.Model.UserDetails;
 import com.example.testapp.adapters.RecyclerViewAdapter;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,57 +28,81 @@ public class DisplayUser extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
+    public ArrayList<Individual> endResult;
+    public int num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_user);
         setTitle("Users");
+        endResult = new ArrayList<>();
 
         recyclerView = (RecyclerView) findViewById(R.id.dispRecycle);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-
         recyclerViewAdapter = new RecyclerViewAdapter();
 
+        num = 4;
+
+        //initial call to method
+        retrofitMethod("users?page=1");
+
+        recyclerViewAdapter.setIndividualsModelList(endResult);
+        Log.e("disp", endResult.toString());
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    //Method called 4 times to access 4 different pages to obtain a total of 12 users and display them in RecyclerView
+    public void retrofitMethod(String url)
+    {
+        //Retrofit initialization
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailsRequestInterface.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         DetailsRequestInterface drInterface = retrofit.create(DetailsRequestInterface.class);
-        Call<UserDetails> call = drInterface.getJSON();
-        UserDetails u = new UserDetails();
-        String val;
-        if(u.getTotalPages() != null){
-            val = u.getTotalPages().toString();
-        }
-        else
-        {
-            val = "Nothing yet";
-        }
-        Log.e("DisplayUser", val);
-
-
+        Call<UserDetails> call = drInterface.getJSON(url);
 
         call.enqueue(new Callback<UserDetails>() {
             @Override
             public void onResponse(@NonNull Call<UserDetails> call, @NonNull Response<UserDetails> response) {
 
-                Log.e("Inside", response.body().getTotalPages().toString());
-                Log.e("inside a","hi");
-                recyclerViewAdapter.setIndividualsModelList(response.body().getData());
-                recyclerView.setAdapter(recyclerViewAdapter);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                endResult.addAll(response.body().getData());
+
+                switch (num)
+                {
+                    case 4:
+                        num--;
+                        retrofitMethod("users?page=2");
+                        break;
+
+                    case 3:
+                        num--;
+                        retrofitMethod("users?page=3");
+                        break;
+
+                    case 2:
+                        num--;
+                        retrofitMethod("users?page=4");
+                        break;
+
+                    case 1:
+                        //adapter of RecyclerView is updated
+                        recyclerViewAdapter.setIndividualsModelList(endResult);
+                        recyclerView.setAdapter(recyclerViewAdapter);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                        break;
+                }
+
             }
 
             @Override
             public void onFailure( @NonNull Call<UserDetails> call, @NonNull Throwable t) {
-
+                Log.e("onFailure DisplayUser", t.toString());
             }
         });
     }

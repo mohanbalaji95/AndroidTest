@@ -35,16 +35,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         CircleImageView avatar;
-        TextView firstText;
-        TextView lastText;
+        TextView nameText;
         RelativeLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
             avatar =(CircleImageView)itemView.findViewById(R.id.avatar);
-            firstText = (TextView)itemView.findViewById(R.id.firstText);
-            lastText = (TextView)itemView.findViewById(R.id.lastText);
+            nameText = (TextView)itemView.findViewById(R.id.nameText);
         }
     }
 
@@ -56,8 +54,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
-        holder.firstText.setText(individualsList.get(position).getFirstName());
-        holder.lastText.setText(individualsList.get(position).getLastName());
+        String name = individualsList.get(position).getFirstName() + " " + individualsList.get(position).getLastName();
+        holder.nameText.setText(name);
         Picasso.get().load(individualsList.get(position).getAvatar()).into(holder.avatar);
     }
 
