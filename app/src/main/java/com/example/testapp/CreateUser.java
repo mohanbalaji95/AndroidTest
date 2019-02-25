@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +26,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CreateUser extends AppCompatActivity {
 
-    public EditText name;
-    public EditText job;
+    public EditText editName;
+    public EditText editJob;
     public Button click;
 
     private CreateUserModel cUser;
@@ -41,9 +43,34 @@ public class CreateUser extends AppCompatActivity {
         setContentView(R.layout.activity_create_user);
         setTitle("Create User");
 
-        click = (Button) findViewById(R.id.button);
-        name = (EditText) findViewById(R.id.name);
-        job = (EditText) findViewById(R.id.job);
+
+        click = (Button) findViewById(R.id.clickMe);
+        editName = (EditText) findViewById(R.id.name);
+        editJob = (EditText) findViewById(R.id.job);
+
+        String name, job;
+
+        if(savedInstanceState!= null)
+        {
+            name = savedInstanceState.getString("name");
+            job = savedInstanceState.getString("job");
+
+            if(name != null)
+            {
+                editName.setText(name);
+            }
+            if(job != null)
+            {
+                editJob.setText(job);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("name", editName.getText().toString());
+        outState.putString("job", editJob.getText().toString());
     }
 
     public static void start(Context context)
@@ -52,9 +79,10 @@ public class CreateUser extends AppCompatActivity {
         context.startActivity(starter);
     }
 
+    //onClick method for creating user using retrofit and displaying the response
     public void clickMe(View view)
     {
-        String nameUser = name.getText().toString(), jobUser = job.getText().toString();
+        String nameUser = editName.getText().toString(), jobUser = editJob.getText().toString();
 
         CreateResponse cr =retrofit.create(CreateResponse.class);
         Call<ResponseBody> call = cr.sendUser(nameUser, jobUser);
@@ -96,8 +124,14 @@ public class CreateUser extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Log.e("onFailure in CreateUser", t.toString());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

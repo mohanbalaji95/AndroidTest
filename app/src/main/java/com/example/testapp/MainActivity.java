@@ -22,5 +22,9 @@ public class MainActivity extends AppCompatActivity {
         DisplayUser.start(this);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
 }

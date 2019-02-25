@@ -10,7 +10,8 @@
     card_view:cardCornerRadius="5dp">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -21,10 +22,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/firstText"
+            android:id="@+id/nameText"
             android:layout_toRightOf="@id/avatar"
             android:layout_toEndOf="@id/avatar"
-            android:text="@string/first_name"
+            android:text="@string/disp_name"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_centerVertical="true"
@@ -32,18 +33,5 @@
             android:layout_marginStart="15dp"
             android:fontFamily="sans-serif-medium"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/lastText"
-            android:layout_toRightOf="@id/firstText"
-            android:layout_toEndOf="@id/firstText"
-            android:text="@string/last_name"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:fontFamily="sans-serif-medium"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
